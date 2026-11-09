@@ -1,0 +1,11 @@
+{
+  "appId": "app.yanlu.ocr",
+  "appName": "砚录",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

@@ -1,0 +1,17 @@
+node_modules
+dist
+release
+agent-tools
+public/ort
+android/.gradle
+android/app/build
+android/build
+android/local.properties
+android/captures
+.idea
+.capacitor
+*.log
+playwright-report
+test-results
+.DS_Store
+accuracy-report.json

@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei",
+    "Source Han Sans SC", "WenQuanYi Micro Hei", sans-serif;
+  --color-paper: #f3eee4;
+  --color-ink: #1c1915;
+  --color-seal: #9d2c2c;
+  --color-card: #fffdf8;
+  --color-line: #e4d8c6;
+  --color-muted: #6f675d;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(157, 44, 44, 0.08), transparent 55%),
+    var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: rgba(157, 44, 44, 0.18);
+}

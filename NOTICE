@@ -1,0 +1,33 @@
+砚录 / Yanlu
+Copyright 2026
+
+This application identifies text on-device. It redistributes the following
+third-party components unchanged except where noted.
+
+PaddleOCR PP-OCRv5 models and ppocrv5_dict.txt
+  Copyright PaddlePaddle Authors
+  License: Apache License 2.0
+  Source: https://github.com/PaddlePaddle/PaddleOCR
+  ONNX files: RapidAI RapidOCR model release v3.10.0
+  https://www.modelscope.cn/models/RapidAI/RapidOCR
+  The dictionary file is byte-identical to
+  ppocr/utils/dict/ppocrv5_dict.txt in PaddleOCR.
+
+RapidOCR
+  Copyright RapidAI
+  License: Apache License 2.0
+  https://github.com/RapidAI/RapidOCR
+  Detection, classification, and recognition post-processing in this
+  repository is an independent TypeScript implementation of the published
+  PP-OCR pipeline (resize, DB box extraction, perspective crop, CTC decode).
+
+ONNX Runtime / onnxruntime-web / onnxruntime-node 1.31.1
+  License: MIT
+  https://github.com/microsoft/onnxruntime
+
+Clipper (clipper-lib)
+  License: Boost Software License 1.0
+  http://www.angusj.com/delphi/clipper.php
+
+Test images were rendered with Noto Sans CJK (SIL Open Font License 1.1).
+The font itself is not bundled in the application.

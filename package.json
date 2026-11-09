@@ -1,0 +1,81 @@
+{
+  "name": "yanlu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "砚录：完全离线的简体中文与英文 OCR",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 43123 --strictPort",
+    "build": "tsc --noEmit && vite build && node scripts/write-sw.mjs",
+    "preview": "vite preview --host 127.0.0.1 --port 43124 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:network": "node tests/network.mjs",
+    "verify:models": "node scripts/verify-models.mjs",
+    "generate:fixtures": "python3 scripts/generate-fixtures.py",
+    "dist:pwa": "npm run build && node scripts/zip-pwa.mjs",
+    "dist:desktop": "npm run build && electron-builder --linux AppImage --win zip"
+  },
+  "build": {
+    "appId": "app.yanlu.ocr",
+    "productName": "Yanlu",
+    "asar": false,
+    "directories": {
+      "output": "release/desktop"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "linux": {
+      "target": ["AppImage"],
+      "category": "Office",
+      "icon": "public/icons/icon-512.png",
+      "artifactName": "Yanlu-${version}-linux.${ext}"
+    },
+    "win": {
+      "target": ["zip"],
+      "icon": "build/icon.ico",
+      "artifactName": "Yanlu-${version}-windows.${ext}"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "identity": null,
+      "icon": "public/icons/icon-512.png",
+      "artifactName": "Yanlu-${version}-mac.${ext}"
+    }
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-switch": "^1.2.6",
+    "class-variance-authority": "^0.7.1",
+    "clipper-lib": "^6.4.2",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.553.0",
+    "onnxruntime-web": "1.31.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.0",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/node": "^24.10.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^6.0.0",
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0",
+    "onnxruntime-node": "1.31.1",
+    "playwright": "^1.56.1",
+    "sharp": "^0.34.4",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.0",
+    "vitest": "^4.0.8"
+  }
+}

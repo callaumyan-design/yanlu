@@ -1,0 +1,52 @@
+[
+  {
+    "file": "mixed.png",
+    "text": "砚录可以识别简体中文和 English 混合文本。",
+    "minAccuracy": 0.98
+  },
+  {
+    "file": "multiline.png",
+    "text": "第一行：春眠不觉晓，处处闻啼鸟。\n第二行：Invoice No. 2026-1109 金额 128.50 元\n第三行：请于 Friday 前完成付款。",
+    "minAccuracy": 0.98
+  },
+  {
+    "file": "rot180.png",
+    "text": "第一行：春眠不觉晓，处处闻啼鸟。\n第二行：Invoice No. 2026-1109 金额 128.50 元\n第三行：请于 Friday 前完成付款。",
+    "minAccuracy": 0.97
+  },
+  {
+    "file": "rot90.png",
+    "text": "第一行：春眠不觉晓，处处闻啼鸟。\n第二行：Invoice No. 2026-1109 金额 128.50 元\n第三行：请于 Friday 前完成付款。",
+    "minAccuracy": 0.97
+  },
+  {
+    "file": "rot270.png",
+    "text": "第一行：春眠不觉晓，处处闻啼鸟。\n第二行：Invoice No. 2026-1109 金额 128.50 元\n第三行：请于 Friday 前完成付款。",
+    "minAccuracy": 0.97
+  },
+  {
+    "file": "skew.png",
+    "text": "第一行：春眠不觉晓，处处闻啼鸟。\n第二行：Invoice No. 2026-1109 金额 128.50 元\n第三行：请于 Friday 前完成付款。",
+    "minAccuracy": 0.96
+  },
+  {
+    "file": "small.png",
+    "text": "小字测试：北京市海淀区中关村大街 27 号\nSmall text ABC-123 mixed with 中文标点，。！？",
+    "minAccuracy": 0.96
+  },
+  {
+    "file": "low-contrast.png",
+    "text": "低对比度：合同编号 HT-2026-018 已签署。",
+    "minAccuracy": 0.96
+  },
+  {
+    "file": "paragraph.png",
+    "text": "离线文字识别不会上传图片。\n模型在设备本地运行，支持简体中文、英文和常见标点。\nHello, 世界！This is line three of the paragraph.\n电话：010-12345678",
+    "minAccuracy": 0.98
+  },
+  {
+    "file": "english.png",
+    "text": "The quick brown fox jumps over 13 lazy dogs.",
+    "minAccuracy": 0.98
+  }
+]
