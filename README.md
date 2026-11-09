@@ -46,11 +46,13 @@
 
 ### Windows
 
-解压 `Yanlu-1.0.0-windows.zip`，运行里面的 `Yanlu.exe`。包没有微软签名，SmartScreen 可能拦截，选择仍要运行即可。识别在窗口内完成，不连外网。
+若你拿到的是完整的 `Yanlu-1.0.0-windows.zip`，解压后运行 `Yanlu.exe`。包没有微软签名，SmartScreen 可能拦截，选择仍要运行即可。
 
-CI 的 Windows 任务还会额外打一个 NSIS 安装包。
+若下载到的是分卷（`Yanlu-windows.7z.01` 起），把所有分卷、`reassemble-windows.bat` 放在同一文件夹，双击 bat。它会拼出 `Yanlu-windows.7z`。再用 7-Zip 解压，运行里面的 `Yanlu.exe`。7-Zip：https://www.7-zip.org/
 
 ### Linux
+
+完整 AppImage：
 
 ```bash
 chmod +x Yanlu-1.0.0-linux.AppImage
@@ -58,6 +60,16 @@ chmod +x Yanlu-1.0.0-linux.AppImage
 ```
 
 若系统没有 FUSE，可以 `./Yanlu-1.0.0-linux.AppImage --appimage-extract-and-run`。
+
+分卷（`Yanlu-linux.7z.01` 起）放在同一目录后：
+
+```bash
+chmod +x reassemble-linux.sh
+./reassemble-linux.sh
+7z x Yanlu-linux.7z
+chmod +x yanlu
+./yanlu
+```
 
 ### macOS
 

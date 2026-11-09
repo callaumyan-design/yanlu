@@ -27,8 +27,10 @@
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "package.json"
+      "package.json",
+      "!**/node_modules/**"
     ],
+    "electronLanguages": ["en-US", "zh-CN", "zh-TW"],
     "linux": {
       "target": ["AppImage"],
       "category": "Office",
