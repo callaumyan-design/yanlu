@@ -10,7 +10,12 @@ import {
 } from "./geometry";
 import {
   detTargetSize,
+  borderIsPlain,
+  cropRgb,
+  inflateQuad,
+  inkBoundingBox,
   normalizeNchw,
+  padRgb,
   resizeNormFixed,
   resizeRgb,
   rot180,
@@ -19,11 +24,12 @@ import {
   unrotatePoint,
   warpQuad,
 } from "./image";
+import { restoreOcrSpaces } from "./text";
 import type { OcrBox, OcrDeps, OcrProgress, OcrResult, Point, RgbImage } from "./types";
 
 const DET_THRESH = 0.3;
 const BOX_THRESH = 0.5;
-const UNCLIP_RATIO = 1.6;
+const UNCLIP_RATIO = 1.75;
 const MIN_SIZE = 3;
 const CLS_THRESH = 0.9;
 
@@ -72,7 +78,7 @@ function detectBoxes(prob: Float32Array, width: number, height: number, destWidt
 }
 
 async function runDet(image: RgbImage, deps: OcrDeps): Promise<RawBox[]> {
-  const target = detTargetSize(image.width, image.height);
+  const target = detTargetSize(image.width, image.height, 1280);
   const resized = resizeRgb(image, target.width, target.height);
   const input = normalizeNchw(resized);
   const output = await deps.det.run(input, [1, 3, resized.height, resized.width]);
@@ -85,7 +91,7 @@ async function runDet(image: RgbImage, deps: OcrDeps): Promise<RawBox[]> {
   return detectBoxes(prob, outW, outH, image.width, image.height);
 }
 
-function cropBox(image: RgbImage, points: Point[]): RgbImage | null {
+function boxSize(points: Point[]): { width: number; height: number } {
   const width = Math.max(
     1,
     Math.round(
@@ -104,10 +110,37 @@ function cropBox(image: RgbImage, points: Point[]): RgbImage | null {
       ),
     ),
   );
-  if (width < 2 || height < 2) return null;
-  let crop = warpQuad(image, points, width, height);
-  if (crop.height / Math.max(crop.width, 1) >= 1.5) crop = rot90ccw(crop);
+  return { width, height };
+}
+
+function finalizeCrop(crop: RgbImage): RgbImage {
+  if (crop.height / Math.max(crop.width, 1) >= 1.5) return rot90ccw(crop);
   return crop;
+}
+
+function cropBox(image: RgbImage, points: Point[]): RgbImage | null {
+  const raw = boxSize(points);
+  if (raw.width < 2 || raw.height < 2) return null;
+  return finalizeCrop(warpQuad(image, points, raw.width, raw.height));
+}
+
+/** Expand a short box so tall/thin glyphs like 高 and 小 are not clipped. */
+function cropBoxInflated(image: RgbImage, points: Point[]): RgbImage | null {
+  const raw = boxSize(points);
+  if (raw.width < 2 || raw.height < 2) return null;
+  const ratio = raw.width / Math.max(raw.height, 1);
+  const marginY = ratio >= 16 ? Math.max(6, Math.min(8, Math.round(raw.height * 0.2))) : Math.max(4, Math.min(6, Math.round(raw.height * 0.15)));
+  const expanded = inflateQuad(points, 2, marginY);
+  const size = boxSize(expanded);
+  const crop = finalizeCrop(warpQuad(image, expanded, size.width, size.height));
+  return ratio >= 16 ? padRgb(crop, 2, 2, "replicate") : crop;
+}
+
+function recRank(rec: { text: string; score: number }): number {
+  // Prefer complete glyphs (higher confidence * a mild length bonus) so a clipped
+  // 高 does not beat a slightly lower-scoring but complete crop.
+  const len = rec.text.replace(/\s+/g, "").length;
+  return rec.score * Math.log(2 + len);
 }
 
 async function classifyCrop(crop: RgbImage, deps: OcrDeps): Promise<{ label: number; score: number }> {
@@ -162,20 +195,11 @@ async function recognizeCrop(crop: RgbImage, deps: OcrDeps): Promise<{ text: str
   return ctcDecode(output.data, timeSteps, classes, deps.dict);
 }
 
-function median(values: number[]): number {
-  if (!values.length) return 0;
-  const sorted = values.slice().sort((a, b) => a - b);
-  return sorted[Math.floor(sorted.length / 2)];
-}
-
-function isSideways(boxes: RawBox[]): boolean {
-  if (boxes.length < 1) return false;
-  const ratios = boxes.map((box) => {
-    const { width, height } = edgeLengths(box.points);
-    return width / Math.max(height, 1);
-  });
-  return median(ratios) < 1;
-}
+// Page-level 90/270 rotation was removed. It used the median box aspect, so a
+// table of narrow digits or an upright vertical plaque was treated as a sideways
+// photo. Per-crop rotation already turns tall text lines horizontal, and on the
+// 46-image set that is enough for real 90-degree photos. The page rotation made
+// vertical loose CER 0.0566 -> 0.1509 and turned the medal-table digits sideways.
 
 interface Fragment {
   text: string;
@@ -207,22 +231,48 @@ function groupLines(fragments: Fragment[]): LineGroup[] {
     };
   });
   items.sort((a, b) => a.top - b.top || a.left - b.left);
+  const columnLike = (item: (typeof items)[number]) => item.h > Math.max(40, (item.right - item.left) * 1.8);
+  const sameColumn = (a: (typeof items)[number], b: (typeof items)[number]) => {
+    const overlap = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+    const width = Math.min(a.right - a.left, b.right - b.left);
+    return width > 0 && overlap / width > 0.45;
+  };
   const lines: { cy: number; h: number; items: typeof items }[] = [];
   for (const item of items) {
     let placed = false;
-    for (const line of lines) {
-      if (Math.abs(item.cy - line.cy) < Math.max(item.h, line.h) * 0.32) {
-        line.items.push(item);
-        line.cy = (line.cy * (line.items.length - 1) + item.cy) / line.items.length;
-        line.h = Math.max(line.h, item.h);
-        placed = true;
-        break;
+    if (columnLike(item)) {
+      // Stack fragments of one vertical strip. Do not merge neighboring columns.
+      for (const line of lines) {
+        if (!line.items.every(columnLike)) continue;
+        if (line.items.some((other) => sameColumn(item, other))) {
+          line.items.push(item);
+          line.cy = (line.cy * (line.items.length - 1) + item.cy) / line.items.length;
+          line.h = Math.max(line.h, item.h);
+          placed = true;
+          break;
+        }
+      }
+    } else {
+      for (const line of lines) {
+        if (line.items.some(columnLike)) continue;
+        if (Math.abs(item.cy - line.cy) < Math.max(item.h, line.h) * 0.32) {
+          line.items.push(item);
+          line.cy = (line.cy * (line.items.length - 1) + item.cy) / line.items.length;
+          line.h = Math.max(line.h, item.h);
+          placed = true;
+          break;
+        }
       }
     }
     if (!placed) lines.push({ cy: item.cy, h: item.h, items: [item] });
   }
+  const columns = lines.filter((line) => line.items.every(columnLike));
+  if (columns.length >= 2 && columns.length === lines.length) {
+    lines.sort((a, b) => b.items[0].left - a.items[0].left);
+  }
   return lines.map((line) => {
-    line.items.sort((a, b) => a.left - b.left);
+    if (line.items.every(columnLike)) line.items.sort((a, b) => a.top - b.top);
+    else line.items.sort((a, b) => a.left - b.left);
     return { fragments: line.items.map((item) => item.fragment) };
   });
 }
@@ -243,6 +293,27 @@ function joinFragments(fragments: Fragment[]): string {
   return text;
 }
 
+function preferAlternate(base: { text: string; score: number }, alt: { text: string; score: number }): boolean {
+  const baseLen = base.text.replace(/\s+/g, "").length;
+  const altLen = alt.text.replace(/\s+/g, "").length;
+  // A clipped glyph usually shortens the line; keep the longer crop when its
+  // confidence is still in a reasonable band of the tight crop.
+  if (altLen > baseLen && alt.score >= Math.min(0.5, base.score * 0.8)) return true;
+  if (altLen < baseLen && base.score >= Math.min(0.5, alt.score * 0.8)) return false;
+  return recRank(alt) > recRank(base);
+}
+
+async function recognizePrepared(
+  crop: RgbImage,
+  deps: OcrDeps,
+): Promise<{ rec: { text: string; score: number }; turned: boolean }> {
+  const cls = await classifyCrop(crop, deps);
+  const turned = cls.label === 1 && cls.score > CLS_THRESH;
+  const prepared = turned ? rot180(crop) : crop;
+  const rec = await recognizeCrop(prepared, deps);
+  return { rec, turned };
+}
+
 async function readImage(
   image: RgbImage,
   boxes: RawBox[],
@@ -259,12 +330,22 @@ async function readImage(
     });
     const crop = cropBox(image, boxes[i].points);
     if (!crop) continue;
-    const cls = await classifyCrop(crop, deps);
-    const turned = cls.label === 1 && cls.score > CLS_THRESH;
-    const prepared = turned ? rot180(crop) : crop;
+    const recOne = await recognizePrepared(crop, deps);
+    let rec = recOne.rec;
+    let turned = recOne.turned;
+    const raw = boxSize(boxes[i].points);
+    if (raw.height < 40) {
+      const alt = cropBoxInflated(image, boxes[i].points);
+      if (alt) {
+        const recTwo = await recognizePrepared(alt, deps);
+        if (preferAlternate(recOne.rec, recTwo.rec)) {
+          rec = recTwo.rec;
+          turned = recTwo.turned;
+        }
+      }
+    }
     if (turned) upsideDown++;
-    const rec = await recognizeCrop(prepared, deps);
-    const text = rec.text.trim();
+    const text = restoreOcrSpaces(rec.text).trim();
     if (!text) continue;
     fragments.push({
       text,
@@ -292,7 +373,7 @@ function assemble(
   const texts: string[] = [];
   let scoreSum = 0;
   for (const line of lines) {
-    const text = joinFragments(line.fragments).trim();
+    const text = restoreOcrSpaces(joinFragments(line.fragments)).trim();
     if (!text) continue;
     texts.push(text);
     const score =
@@ -320,6 +401,47 @@ function assemble(
  * PP-OCRv5 detection + text-line orientation + recognition.
  * Geometry follows the Apache-2.0 PaddleOCR / RapidOCR pipeline.
  */
+function composeRotation(a: 0 | 90 | 180 | 270, b: 0 | 90 | 180 | 270): 0 | 90 | 180 | 270 {
+  return ((a + b) % 360) as 0 | 90 | 180 | 270;
+}
+
+function readQuality(read: { fragments: Fragment[]; upsideDown: number; total: number }): number {
+  const n = read.fragments.reduce((sum, fragment) => sum + fragment.text.replace(/\s+/g, "").length, 0);
+  const score =
+    read.fragments.reduce((sum, fragment) => sum + fragment.score, 0) / Math.max(read.total, 1);
+  const up = read.upsideDown / Math.max(read.total, 1);
+  return n * Math.max(score, 0.05) * (1 - 0.65 * up);
+}
+
+function isTextStrip(image: RgbImage): boolean {
+  const shortSide = Math.min(image.width, image.height);
+  const longSide = Math.max(image.width, image.height);
+  return shortSide <= 180 || longSide / Math.max(shortSide, 1) >= 5;
+}
+
+async function recognizeInkLine(
+  image: RgbImage,
+  deps: OcrDeps,
+): Promise<{ rec: { text: string; score: number }; turned: boolean; points: Point[] } | null> {
+  const box = inkBoundingBox(image, 8) ?? { x: 0, y: 0, width: image.width, height: image.height };
+  let crop = cropRgb(image, box.x, box.y, box.width, box.height);
+  if (crop.height / Math.max(crop.width, 1) >= 1.5) crop = rot90ccw(crop);
+  const prepared = await recognizePrepared(crop, deps);
+  const text = restoreOcrSpaces(prepared.rec.text).trim();
+  if (!text) return null;
+  const points: Point[] = [
+    { x: box.x, y: box.y },
+    { x: box.x + box.width, y: box.y },
+    { x: box.x + box.width, y: box.y + box.height },
+    { x: box.x, y: box.y + box.height },
+  ];
+  return { rec: { text: prepared.rec.text, score: prepared.rec.score }, turned: prepared.turned, points };
+}
+
+/**
+ * PP-OCRv5 detection + text-line orientation + recognition.
+ * Geometry follows the Apache-2.0 PaddleOCR / RapidOCR pipeline.
+ */
 export async function recognizeImage(
   image: RgbImage,
   deps: OcrDeps,
@@ -331,35 +453,58 @@ export async function recognizeImage(
   let working = image;
   let rotation: 0 | 90 | 180 | 270 = 0;
   let boxes = first;
-  if (isSideways(first)) {
-    onProgress?.({ ratio: 0.28, message: "正在校正图片方向" });
-    let best: { image: RgbImage; rotation: 90 | 270; boxes: RawBox[] } | null = null;
-    for (const turn of [90, 270] as const) {
-      const turned = rotateRgb(image, turn);
-      const boxes = await runDet(turned, deps);
-      if (!boxes.length) continue;
-      const ratios = boxes.map((box) => {
-        const size = edgeLengths(box.points);
-        return size.width / Math.max(size.height, 1);
-      });
-      const score = median(ratios) * boxes.length;
-      const bestRatios = best
-        ? median(
-            best.boxes.map((box) => {
-              const size = edgeLengths(box.points);
-              return size.width / Math.max(size.height, 1);
-            }),
-          ) * best.boxes.length
-        : -1;
-      if (!best || score > bestRatios) best = { image: turned, rotation: turn, boxes };
-    }
-    if (best && best.boxes.length) {
-      working = best.image;
-      rotation = best.rotation;
-      boxes = best.boxes;
+  let read = await readImage(working, boxes, deps, onProgress, 0.4);
+  if (read.total > 0 && read.upsideDown * 2 >= read.total) {
+    onProgress?.({ ratio: 0.38, message: "正在校正上下颠倒的页面" });
+    const turned = rotateRgb(working, 180);
+    const boxes180 = await runDet(turned, deps);
+    const read180 = await readImage(turned, boxes180, deps, undefined, 0.55);
+    if (readQuality(read180) > readQuality(read) * 1.02) {
+      working = turned;
+      rotation = composeRotation(rotation, 180);
+      boxes = boxes180;
+      read = read180;
     }
   }
-  const read = await readImage(working, boxes, deps, onProgress, rotation === 0 ? 0.4 : 0.45);
+  const strip = isTextStrip(working);
+  const plain = borderIsPlain(working);
+  const shouldFallback =
+    boxes.length === 0 ||
+    strip ||
+    (plain && boxes.length <= 3);
+  if (shouldFallback) {
+    const fallback = await recognizeInkLine(working, deps);
+    if (fallback) {
+      const text = restoreOcrSpaces(fallback.rec.text).trim();
+      const existing = read.fragments.map((fragment) => fragment.text).join("");
+      const existingLoose = existing.replace(/\s+/g, "");
+      const fallbackLoose = text.replace(/\s+/g, "");
+      // Only replace a detected page when the fallback is clearly more complete.
+      // A 2–3 box vertical page must not be collapsed into one rec crop.
+      const existingWeak = existingLoose.length <= 8;
+      const better =
+        read.fragments.length === 0 ||
+        (strip && fallbackLoose.length >= existingLoose.length && fallback.rec.score >= 0.55) ||
+        (existingWeak && fallbackLoose.length > existingLoose.length && fallback.rec.score >= 0.55) ||
+        (read.total <= 2 &&
+          fallbackLoose.length > existingLoose.length * 1.2 &&
+          fallback.rec.score >= 0.6);
+      if (better && text) {
+        read = {
+          fragments: [
+            {
+              text,
+              score: fallback.rec.score,
+              points: fallback.points,
+              upsideDown: fallback.turned,
+            },
+          ],
+          upsideDown: fallback.turned ? 1 : 0,
+          total: 1,
+        };
+      }
+    }
+  }
   onProgress?.({ ratio: 1, message: "识别完成" });
   return assemble(read.fragments, image.width, image.height, rotation);
 }

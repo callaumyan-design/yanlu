@@ -1,0 +1,226 @@
+[
+  {
+    "file": "user_line_0.png",
+    "text": "Max：每 5 小时及每周用量均为 Pro 的 5 倍。Ultra：每周用量为 Pro 的 10 倍",
+    "tags": [
+      "user",
+      "mixed"
+    ],
+    "width": 988,
+    "height": 68
+  },
+  {
+    "file": "user_line_1.png",
+    "text": "更高的输出限额，带来更丰富的回复和更优质的 Artifacts",
+    "tags": [
+      "user",
+      "mixed"
+    ],
+    "width": 742,
+    "height": 69
+  },
+  {
+    "file": "user_line_2.png",
+    "text": "抢先体验 Claude 高级功能",
+    "tags": [
+      "user",
+      "mixed"
+    ],
+    "width": 368,
+    "height": 68
+  },
+  {
+    "file": "user_card.png",
+    "text": "Max 和 Ultra\nMax：每 5 小时及每周用量均为 Pro 的 5 倍。Ultra：每周用量为 Pro 的 10 倍\n更高的输出限额，带来更丰富的回复和更优质的 Artifacts\n抢先体验 Claude 高级功能",
+    "tags": [
+      "user",
+      "ui",
+      "small"
+    ],
+    "width": 740,
+    "height": 181
+  },
+  {
+    "file": "user_phone.png",
+    "text": "Max 和 Ultra\nMax：每 5 小时及每周用量均为 Pro 的 5 倍。Ultra：每周\n用量为 Pro 的 10 倍\n更高的输出限额，带来更丰富的回复和更优质的 Artifacts\n抢先体验 Claude 高级功能",
+    "tags": [
+      "user",
+      "ui",
+      "small",
+      "wrap"
+    ],
+    "width": 390,
+    "height": 176
+  },
+  {
+    "file": "user_phone_2x.png",
+    "text": "Max 和 Ultra\nMax：每 5 小时及每周用量均为 Pro 的 5 倍。Ultra：每周\n用量为 Pro 的 10 倍\n更高的输出限额，带来更丰富的回复和更优质的 Artifacts\n抢先体验 Claude 高级功能",
+    "tags": [
+      "user",
+      "ui",
+      "wrap"
+    ],
+    "width": 780,
+    "height": 325
+  },
+  {
+    "file": "small_invoice.png",
+    "text": "小字测试：北京市海淀区中关村大街 27 号\nInvoice No. 2026-1109 金额 128.50 元\n电话：010-12345678，请于 Friday 前完成。",
+    "tags": [
+      "small",
+      "mixed",
+      "numbers"
+    ],
+    "width": 337,
+    "height": 117
+  },
+  {
+    "file": "dense_settings.png",
+    "text": "账号设置  Account Settings\n已开启两步验证  2FA is ON\n上次登录 2026-11-10 14:32\n流量剩余 3.5 GB / 10 GB\n版本 v1.0.0 (build 2048)",
+    "tags": [
+      "ui",
+      "dense",
+      "mixed"
+    ],
+    "width": 560,
+    "height": 152
+  },
+  {
+    "file": "long_line.png",
+    "text": "这是一条很长的说明：离线 OCR 必须在本地完成识别，不得上传图片，也不得访问 api.example.com 或任何远程模型。",
+    "tags": [
+      "long",
+      "mixed"
+    ],
+    "width": 1196,
+    "height": 56
+  },
+  {
+    "file": "numbers.png",
+    "text": "合同编号 HT-2026-018，金额 ¥12,847.50，税率 13%，合计 RMB 14517.68。",
+    "tags": [
+      "numbers",
+      "punct"
+    ],
+    "width": 793,
+    "height": 64
+  },
+  {
+    "file": "low_contrast.png",
+    "text": "低对比度：更高的输出限额与更优质的 Artifacts，请在 5 小时内完成。",
+    "tags": [
+      "low-contrast",
+      "mixed"
+    ],
+    "width": 732,
+    "height": 71
+  },
+  {
+    "file": "paragraph.png",
+    "text": "离线文字识别不会上传图片。\n模型在设备本地运行，支持简体中文、英文和常见标点。\nHello, 世界！This is line three of the paragraph.\n抢先体验 Claude 高级功能，每 5 小时用量为 Pro 的 5 倍。",
+    "tags": [
+      "paragraph",
+      "mixed"
+    ],
+    "width": 615,
+    "height": 200
+  },
+  {
+    "file": "english.png",
+    "text": "The quick brown fox jumps over 13 lazy dogs.",
+    "tags": [
+      "english"
+    ],
+    "width": 551,
+    "height": 74
+  },
+  {
+    "file": "punctuation.png",
+    "text": "问：这是什么？答：这是 OCR（文字识别）测试，包含逗号、顿号、分号；以及“引号”和【括号】！",
+    "tags": [
+      "punct"
+    ],
+    "width": 945,
+    "height": 62
+  },
+  {
+    "file": "heading_body.png",
+    "text": "更高的输出限额\n带来更丰富的回复和更优质的 Artifacts。\n抢先体验 Claude 高级功能。",
+    "tags": [
+      "ui",
+      "mixed"
+    ],
+    "width": 373,
+    "height": 132
+  },
+  {
+    "file": "stress_gao_xiao.png",
+    "text": "提高效率：从小学到高中，每 5 小时复习一次高级语法。小高同学使用 Claude 高级功能。",
+    "tags": [
+      "stress",
+      "mixed"
+    ],
+    "width": 914,
+    "height": 63
+  },
+  {
+    "file": "tiny12.png",
+    "text": "更高的输出限额，带来更丰富的回复和更优质的 Artifacts\nMax：每 5 小时及每周用量均为 Pro 的 5 倍。",
+    "tags": [
+      "tiny",
+      "mixed"
+    ],
+    "width": 520,
+    "height": 60
+  },
+  {
+    "file": "soft_blur.png",
+    "text": "Max：每 5 小时及每周用量均为 Pro 的 5 倍。Ultra：每周用量为 Pro 的 10 倍\n更高的输出限额，带来更丰富的回复和更优质的 Artifacts\n抢先体验 Claude 高级功能",
+    "tags": [
+      "blur",
+      "user"
+    ],
+    "width": 700,
+    "height": 133
+  },
+  {
+    "file": "table.png",
+    "text": "项目                数值\nPro 用量            1 倍\nMax 用量            5 倍\nUltra 每周用量      10 倍\n输出限额            更高",
+    "tags": [
+      "ui",
+      "numbers",
+      "dense"
+    ],
+    "width": 420,
+    "height": 172
+  },
+  {
+    "file": "product.png",
+    "text": "砚录 1.0.0 完全离线，支持 iOS、Android 和 PC。\n识别引擎为 PaddleOCR PP-OCRv5 mobile，字典 18383 字。\n请将截图拖入窗口，或按 Ctrl+V 粘贴。",
+    "tags": [
+      "mixed",
+      "numbers"
+    ],
+    "width": 585,
+    "height": 139
+  },
+  {
+    "file": "claude_palette.png",
+    "text": "Max：每 5 小时及每周用量均为 Pro 的 5 倍。Ultra：每周用量为 Pro 的 10 倍\n更高的输出限额，带来更丰富的回复和更优质的 Artifacts\n抢先体验 Claude 高级功能",
+    "tags": [
+      "user",
+      "ui"
+    ],
+    "width": 720,
+    "height": 146
+  },
+  {
+    "file": "mixed_sentence.png",
+    "text": "砚录可以识别简体中文和 English 混合文本。",
+    "tags": [
+      "mixed"
+    ],
+    "width": 699,
+    "height": 99
+  }
+]

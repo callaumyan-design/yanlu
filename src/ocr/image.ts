@@ -303,3 +303,169 @@ export function resizeNormFixed(
   }
   return out;
 }
+
+/** Pad an RGB image. `replicate` matches OpenCV BORDER_REPLICATE. */
+export function padRgb(
+  image: RgbImage,
+  padX: number,
+  padY: number,
+  mode: "replicate" | "white" = "replicate",
+): RgbImage {
+  const padLeft = Math.max(0, Math.round(padX));
+  const padTop = Math.max(0, Math.round(padY));
+  if (padLeft === 0 && padTop === 0) return image;
+  const width = image.width + padLeft * 2;
+  const height = image.height + padTop * 2;
+  const data = new Uint8Array(width * height * 3);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const di = (y * width + x) * 3;
+      const inside =
+        x >= padLeft && x < padLeft + image.width && y >= padTop && y < padTop + image.height;
+      if (!inside && mode === "white") {
+        data[di] = 255;
+        data[di + 1] = 255;
+        data[di + 2] = 255;
+        continue;
+      }
+      const sx = clampIndex(x - padLeft, image.width - 1);
+      const sy = clampIndex(y - padTop, image.height - 1);
+      const si = (sy * image.width + sx) * 3;
+      data[di] = image.data[si];
+      data[di + 1] = image.data[si + 1];
+      data[di + 2] = image.data[si + 2];
+    }
+  }
+  return { width, height, data };
+}
+
+/**
+ * Offset every edge of a clockwise quad outward by `margin` pixels
+ * along its normal. Centroid scaling barely moves the long edges of a
+ * wide, short text box, which is exactly when tall glyphs get clipped.
+ */
+export function inflateQuad(points: Point[], marginX: number, marginY: number = marginX): Point[] {
+  if ((marginX <= 0 && marginY <= 0) || points.length < 3) return points;
+  const n = points.length;
+  let area = 0;
+  for (let i = 0; i < n; i++) {
+    const p0 = points[i];
+    const p1 = points[(i + 1) % n];
+    area += p0.x * p1.y - p1.x * p0.y;
+  }
+  // Image coordinates (y down): clockwise quads have positive signed area.
+  // Rotate the edge 90° so the normal points outward for either winding.
+  const sign = area >= 0 ? 1 : -1;
+  const out: Point[] = [];
+  for (let i = 0; i < n; i++) {
+    const prev = points[(i + n - 1) % n];
+    const curr = points[i];
+    const next = points[(i + 1) % n];
+    const d0x = curr.x - prev.x;
+    const d0y = curr.y - prev.y;
+    const d1x = next.x - curr.x;
+    const d1y = next.y - curr.y;
+    const l0 = Math.hypot(d0x, d0y) || 1;
+    const l1 = Math.hypot(d1x, d1y) || 1;
+    const n0x = (sign * d0y) / l0;
+    const n0y = (sign * -d0x) / l0;
+    const n1x = (sign * d1y) / l1;
+    const n1y = (sign * -d1x) / l1;
+    // Long (horizontal) edges get the vertical margin; short edges get the side margin.
+    const m0 = Math.abs(d0x) >= Math.abs(d0y) ? marginY : marginX;
+    const m1 = Math.abs(d1x) >= Math.abs(d1y) ? marginY : marginX;
+    out.push({
+      x: curr.x + m0 * n0x + m1 * n1x,
+      y: curr.y + m0 * n0y + m1 * n1y,
+    });
+  }
+  return out;
+}
+
+function lumaAt(image: RgbImage, x: number, y: number): number {
+  const i = (y * image.width + x) * 3;
+  return 0.299 * image.data[i] + 0.587 * image.data[i + 1] + 0.114 * image.data[i + 2];
+}
+
+/** Tight box around pixels that differ from the corner background, plus padding. */
+export function inkBoundingBox(
+  image: RgbImage,
+  pad = 6,
+): { x: number; y: number; width: number; height: number } | null {
+  const { width, height, data } = image;
+  if (width < 2 || height < 2) return null;
+  const corners = [
+    lumaAt(image, 0, 0),
+    lumaAt(image, width - 1, 0),
+    lumaAt(image, 0, height - 1),
+    lumaAt(image, width - 1, height - 1),
+  ];
+  const bg = (corners[0] + corners[1] + corners[2] + corners[3]) / 4;
+  const thresh = 28;
+  let minX = width, minY = height, maxX = -1, maxY = -1;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 3;
+      const luma = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+      if (Math.abs(luma - bg) < thresh) continue;
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (maxX < minX || maxY < minY) return null;
+  const x = Math.max(0, minX - pad);
+  const y = Math.max(0, minY - pad);
+  const w = Math.min(width, maxX + 1 + pad) - x;
+  const h = Math.min(height, maxY + 1 + pad) - y;
+  if (w < 2 || h < 2) return null;
+  return { x, y, width: w, height: h };
+}
+
+export function cropRgb(
+  image: RgbImage,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+): RgbImage {
+  const data = new Uint8Array(width * height * 3);
+  for (let row = 0; row < height; row++) {
+    const sy = Math.min(image.height - 1, Math.max(0, y + row));
+    for (let col = 0; col < width; col++) {
+      const sx = Math.min(image.width - 1, Math.max(0, x + col));
+      const si = (sy * image.width + sx) * 3;
+      const di = (row * width + col) * 3;
+      data[di] = image.data[si];
+      data[di + 1] = image.data[si + 1];
+      data[di + 2] = image.data[si + 2];
+    }
+  }
+  return { width, height, data };
+}
+
+/** True when the image border is a fairly uniform page/background. */
+export function borderIsPlain(image: RgbImage): boolean {
+  const { width, height } = image;
+  const samples: number[] = [];
+  const band = Math.max(1, Math.min(6, Math.floor(Math.min(width, height) / 20)));
+  const push = (x: number, y: number) => samples.push(lumaAt(image, x, y));
+  for (let x = 0; x < width; x += 2) {
+    for (let t = 0; t < band; t++) {
+      push(x, t);
+      push(x, height - 1 - t);
+    }
+  }
+  for (let y = 0; y < height; y += 2) {
+    for (let t = 0; t < band; t++) {
+      push(t, y);
+      push(width - 1 - t, y);
+    }
+  }
+  if (samples.length < 8) return false;
+  const mean = samples.reduce((s, v) => s + v, 0) / samples.length;
+  let varSum = 0;
+  for (const v of samples) varSum += (v - mean) * (v - mean);
+  return Math.sqrt(varSum / samples.length) < 22;
+}
