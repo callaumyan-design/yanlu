@@ -298,7 +298,9 @@ export function App() {
                 {message}
               </span>
               {phase === "done" && meanScore > 0 && (
-                <span>置信度 {Math.round(meanScore * 100)}%</span>
+                <span title="已检出片段的平均置信度，不是整页准确率。没被检出的文字不会拉低这个数字。">
+                  片段置信度 {Math.round(meanScore * 100)}%
+                </span>
               )}
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-[#efe6d6]">

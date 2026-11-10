@@ -195,20 +195,11 @@ async function recognizeCrop(crop: RgbImage, deps: OcrDeps): Promise<{ text: str
   return ctcDecode(output.data, timeSteps, classes, deps.dict);
 }
 
-function median(values: number[]): number {
-  if (!values.length) return 0;
-  const sorted = values.slice().sort((a, b) => a - b);
-  return sorted[Math.floor(sorted.length / 2)];
-}
-
-function isSideways(boxes: RawBox[]): boolean {
-  if (boxes.length < 1) return false;
-  const ratios = boxes.map((box) => {
-    const { width, height } = edgeLengths(box.points);
-    return width / Math.max(height, 1);
-  });
-  return median(ratios) < 1;
-}
+// Page-level 90/270 rotation was removed. It used the median box aspect, so a
+// table of narrow digits or an upright vertical plaque was treated as a sideways
+// photo. Per-crop rotation already turns tall text lines horizontal, and on the
+// 46-image set that is enough for real 90-degree photos. The page rotation made
+// vertical loose CER 0.0566 -> 0.1509 and turned the medal-table digits sideways.
 
 interface Fragment {
   text: string;
@@ -240,22 +231,48 @@ function groupLines(fragments: Fragment[]): LineGroup[] {
     };
   });
   items.sort((a, b) => a.top - b.top || a.left - b.left);
+  const columnLike = (item: (typeof items)[number]) => item.h > Math.max(40, (item.right - item.left) * 1.8);
+  const sameColumn = (a: (typeof items)[number], b: (typeof items)[number]) => {
+    const overlap = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+    const width = Math.min(a.right - a.left, b.right - b.left);
+    return width > 0 && overlap / width > 0.45;
+  };
   const lines: { cy: number; h: number; items: typeof items }[] = [];
   for (const item of items) {
     let placed = false;
-    for (const line of lines) {
-      if (Math.abs(item.cy - line.cy) < Math.max(item.h, line.h) * 0.32) {
-        line.items.push(item);
-        line.cy = (line.cy * (line.items.length - 1) + item.cy) / line.items.length;
-        line.h = Math.max(line.h, item.h);
-        placed = true;
-        break;
+    if (columnLike(item)) {
+      // Stack fragments of one vertical strip. Do not merge neighboring columns.
+      for (const line of lines) {
+        if (!line.items.every(columnLike)) continue;
+        if (line.items.some((other) => sameColumn(item, other))) {
+          line.items.push(item);
+          line.cy = (line.cy * (line.items.length - 1) + item.cy) / line.items.length;
+          line.h = Math.max(line.h, item.h);
+          placed = true;
+          break;
+        }
+      }
+    } else {
+      for (const line of lines) {
+        if (line.items.some(columnLike)) continue;
+        if (Math.abs(item.cy - line.cy) < Math.max(item.h, line.h) * 0.32) {
+          line.items.push(item);
+          line.cy = (line.cy * (line.items.length - 1) + item.cy) / line.items.length;
+          line.h = Math.max(line.h, item.h);
+          placed = true;
+          break;
+        }
       }
     }
     if (!placed) lines.push({ cy: item.cy, h: item.h, items: [item] });
   }
+  const columns = lines.filter((line) => line.items.every(columnLike));
+  if (columns.length >= 2 && columns.length === lines.length) {
+    lines.sort((a, b) => b.items[0].left - a.items[0].left);
+  }
   return lines.map((line) => {
-    line.items.sort((a, b) => a.left - b.left);
+    if (line.items.every(columnLike)) line.items.sort((a, b) => a.top - b.top);
+    else line.items.sort((a, b) => a.left - b.left);
     return { fragments: line.items.map((item) => item.fragment) };
   });
 }
@@ -436,35 +453,7 @@ export async function recognizeImage(
   let working = image;
   let rotation: 0 | 90 | 180 | 270 = 0;
   let boxes = first;
-  if (isSideways(first)) {
-    onProgress?.({ ratio: 0.28, message: "正在校正图片方向" });
-    let best: { image: RgbImage; rotation: 90 | 270; boxes: RawBox[] } | null = null;
-    for (const turn of [90, 270] as const) {
-      const turned = rotateRgb(image, turn);
-      const boxes = await runDet(turned, deps);
-      if (!boxes.length) continue;
-      const ratios = boxes.map((box) => {
-        const size = edgeLengths(box.points);
-        return size.width / Math.max(size.height, 1);
-      });
-      const score = median(ratios) * boxes.length;
-      const bestRatios = best
-        ? median(
-            best.boxes.map((box) => {
-              const size = edgeLengths(box.points);
-              return size.width / Math.max(size.height, 1);
-            }),
-          ) * best.boxes.length
-        : -1;
-      if (!best || score > bestRatios) best = { image: turned, rotation: turn, boxes };
-    }
-    if (best && best.boxes.length) {
-      working = best.image;
-      rotation = best.rotation;
-      boxes = best.boxes;
-    }
-  }
-  let read = await readImage(working, boxes, deps, onProgress, rotation === 0 ? 0.4 : 0.45);
+  let read = await readImage(working, boxes, deps, onProgress, 0.4);
   if (read.total > 0 && read.upsideDown * 2 >= read.total) {
     onProgress?.({ ratio: 0.38, message: "正在校正上下颠倒的页面" });
     const turned = rotateRgb(working, 180);
