@@ -10,7 +10,9 @@ import {
 } from "./geometry";
 import {
   detTargetSize,
+  inflateQuad,
   normalizeNchw,
+  padRgb,
   resizeNormFixed,
   resizeRgb,
   rot180,
@@ -19,6 +21,7 @@ import {
   unrotatePoint,
   warpQuad,
 } from "./image";
+import { restoreOcrSpaces } from "./text";
 import type { OcrBox, OcrDeps, OcrProgress, OcrResult, Point, RgbImage } from "./types";
 
 const DET_THRESH = 0.3;
@@ -85,7 +88,7 @@ async function runDet(image: RgbImage, deps: OcrDeps): Promise<RawBox[]> {
   return detectBoxes(prob, outW, outH, image.width, image.height);
 }
 
-function cropBox(image: RgbImage, points: Point[]): RgbImage | null {
+function boxSize(points: Point[]): { width: number; height: number } {
   const width = Math.max(
     1,
     Math.round(
@@ -104,10 +107,37 @@ function cropBox(image: RgbImage, points: Point[]): RgbImage | null {
       ),
     ),
   );
-  if (width < 2 || height < 2) return null;
-  let crop = warpQuad(image, points, width, height);
-  if (crop.height / Math.max(crop.width, 1) >= 1.5) crop = rot90ccw(crop);
+  return { width, height };
+}
+
+function finalizeCrop(crop: RgbImage): RgbImage {
+  if (crop.height / Math.max(crop.width, 1) >= 1.5) return rot90ccw(crop);
   return crop;
+}
+
+function cropBox(image: RgbImage, points: Point[]): RgbImage | null {
+  const raw = boxSize(points);
+  if (raw.width < 2 || raw.height < 2) return null;
+  return finalizeCrop(warpQuad(image, points, raw.width, raw.height));
+}
+
+/** Expand a short box so tall/thin glyphs like 高 and 小 are not clipped. */
+function cropBoxInflated(image: RgbImage, points: Point[]): RgbImage | null {
+  const raw = boxSize(points);
+  if (raw.width < 2 || raw.height < 2) return null;
+  const ratio = raw.width / Math.max(raw.height, 1);
+  const marginY = ratio >= 16 ? Math.max(6, Math.min(8, Math.round(raw.height * 0.2))) : Math.max(4, Math.min(6, Math.round(raw.height * 0.15)));
+  const expanded = inflateQuad(points, 2, marginY);
+  const size = boxSize(expanded);
+  const crop = finalizeCrop(warpQuad(image, expanded, size.width, size.height));
+  return ratio >= 16 ? padRgb(crop, 2, 2, "replicate") : crop;
+}
+
+function recRank(rec: { text: string; score: number }): number {
+  // Prefer complete glyphs (higher confidence * a mild length bonus) so a clipped
+  // 高 does not beat a slightly lower-scoring but complete crop.
+  const len = rec.text.replace(/\s+/g, "").length;
+  return rec.score * Math.log(2 + len);
 }
 
 async function classifyCrop(crop: RgbImage, deps: OcrDeps): Promise<{ label: number; score: number }> {
@@ -243,6 +273,27 @@ function joinFragments(fragments: Fragment[]): string {
   return text;
 }
 
+function preferAlternate(base: { text: string; score: number }, alt: { text: string; score: number }): boolean {
+  const baseLen = base.text.replace(/\s+/g, "").length;
+  const altLen = alt.text.replace(/\s+/g, "").length;
+  // A clipped glyph usually shortens the line; keep the longer crop when its
+  // confidence is still in a reasonable band of the tight crop.
+  if (altLen > baseLen && alt.score >= Math.min(0.5, base.score * 0.8)) return true;
+  if (altLen < baseLen && base.score >= Math.min(0.5, alt.score * 0.8)) return false;
+  return recRank(alt) > recRank(base);
+}
+
+async function recognizePrepared(
+  crop: RgbImage,
+  deps: OcrDeps,
+): Promise<{ rec: { text: string; score: number }; turned: boolean }> {
+  const cls = await classifyCrop(crop, deps);
+  const turned = cls.label === 1 && cls.score > CLS_THRESH;
+  const prepared = turned ? rot180(crop) : crop;
+  const rec = await recognizeCrop(prepared, deps);
+  return { rec, turned };
+}
+
 async function readImage(
   image: RgbImage,
   boxes: RawBox[],
@@ -259,12 +310,22 @@ async function readImage(
     });
     const crop = cropBox(image, boxes[i].points);
     if (!crop) continue;
-    const cls = await classifyCrop(crop, deps);
-    const turned = cls.label === 1 && cls.score > CLS_THRESH;
-    const prepared = turned ? rot180(crop) : crop;
+    const recOne = await recognizePrepared(crop, deps);
+    let rec = recOne.rec;
+    let turned = recOne.turned;
+    const raw = boxSize(boxes[i].points);
+    if (raw.height < 40) {
+      const alt = cropBoxInflated(image, boxes[i].points);
+      if (alt) {
+        const recTwo = await recognizePrepared(alt, deps);
+        if (preferAlternate(recOne.rec, recTwo.rec)) {
+          rec = recTwo.rec;
+          turned = recTwo.turned;
+        }
+      }
+    }
     if (turned) upsideDown++;
-    const rec = await recognizeCrop(prepared, deps);
-    const text = rec.text.trim();
+    const text = restoreOcrSpaces(rec.text).trim();
     if (!text) continue;
     fragments.push({
       text,
@@ -292,7 +353,7 @@ function assemble(
   const texts: string[] = [];
   let scoreSum = 0;
   for (const line of lines) {
-    const text = joinFragments(line.fragments).trim();
+    const text = restoreOcrSpaces(joinFragments(line.fragments)).trim();
     if (!text) continue;
     texts.push(text);
     const score =
