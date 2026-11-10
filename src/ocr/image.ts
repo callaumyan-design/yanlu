@@ -381,3 +381,91 @@ export function inflateQuad(points: Point[], marginX: number, marginY: number = 
   }
   return out;
 }
+
+function lumaAt(image: RgbImage, x: number, y: number): number {
+  const i = (y * image.width + x) * 3;
+  return 0.299 * image.data[i] + 0.587 * image.data[i + 1] + 0.114 * image.data[i + 2];
+}
+
+/** Tight box around pixels that differ from the corner background, plus padding. */
+export function inkBoundingBox(
+  image: RgbImage,
+  pad = 6,
+): { x: number; y: number; width: number; height: number } | null {
+  const { width, height, data } = image;
+  if (width < 2 || height < 2) return null;
+  const corners = [
+    lumaAt(image, 0, 0),
+    lumaAt(image, width - 1, 0),
+    lumaAt(image, 0, height - 1),
+    lumaAt(image, width - 1, height - 1),
+  ];
+  const bg = (corners[0] + corners[1] + corners[2] + corners[3]) / 4;
+  const thresh = 28;
+  let minX = width, minY = height, maxX = -1, maxY = -1;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 3;
+      const luma = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+      if (Math.abs(luma - bg) < thresh) continue;
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (maxX < minX || maxY < minY) return null;
+  const x = Math.max(0, minX - pad);
+  const y = Math.max(0, minY - pad);
+  const w = Math.min(width, maxX + 1 + pad) - x;
+  const h = Math.min(height, maxY + 1 + pad) - y;
+  if (w < 2 || h < 2) return null;
+  return { x, y, width: w, height: h };
+}
+
+export function cropRgb(
+  image: RgbImage,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+): RgbImage {
+  const data = new Uint8Array(width * height * 3);
+  for (let row = 0; row < height; row++) {
+    const sy = Math.min(image.height - 1, Math.max(0, y + row));
+    for (let col = 0; col < width; col++) {
+      const sx = Math.min(image.width - 1, Math.max(0, x + col));
+      const si = (sy * image.width + sx) * 3;
+      const di = (row * width + col) * 3;
+      data[di] = image.data[si];
+      data[di + 1] = image.data[si + 1];
+      data[di + 2] = image.data[si + 2];
+    }
+  }
+  return { width, height, data };
+}
+
+/** True when the image border is a fairly uniform page/background. */
+export function borderIsPlain(image: RgbImage): boolean {
+  const { width, height } = image;
+  const samples: number[] = [];
+  const band = Math.max(1, Math.min(6, Math.floor(Math.min(width, height) / 20)));
+  const push = (x: number, y: number) => samples.push(lumaAt(image, x, y));
+  for (let x = 0; x < width; x += 2) {
+    for (let t = 0; t < band; t++) {
+      push(x, t);
+      push(x, height - 1 - t);
+    }
+  }
+  for (let y = 0; y < height; y += 2) {
+    for (let t = 0; t < band; t++) {
+      push(t, y);
+      push(width - 1 - t, y);
+    }
+  }
+  if (samples.length < 8) return false;
+  const mean = samples.reduce((s, v) => s + v, 0) / samples.length;
+  let varSum = 0;
+  for (const v of samples) varSum += (v - mean) * (v - mean);
+  return Math.sqrt(varSum / samples.length) < 22;
+}

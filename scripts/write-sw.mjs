@@ -15,7 +15,7 @@ async function walk(dir, root = dir) {
 const dist = path.resolve("dist");
 const files = await walk(dist);
 const assets = files.map((file) => `./${file}`);
-const source = `const CACHE = "yanlu-v2";
+const source = `const CACHE = "yanlu-v3";
 const ASSETS = ${JSON.stringify(assets, null, 2)};
 
 self.addEventListener("install", (event) => {

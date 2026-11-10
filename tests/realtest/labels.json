@@ -1,0 +1,937 @@
+{
+  "items": [
+    {
+      "id": "paddle_00006737",
+      "file": "paddle_00006737.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "登机牌",
+        "BOARDING PASS",
+        "航班 FLIGHT",
+        "日期 DATE",
+        "舱位 CLASS",
+        "序号 SERIAL NO.",
+        "座位号 SEAT NO.",
+        "MU 2379",
+        "03DEC",
+        "M",
+        "035",
+        "目的地 TO",
+        "始发地 FROM",
+        "登机口 GATE",
+        "登机时间 BDT",
+        "福州",
+        "TAIYUAN",
+        "G11",
+        "FUZHOU",
+        "身份识别 IDNO.",
+        "姓名 NAME",
+        "ZHANGQIWEI",
+        "张祺伟",
+        "票号 TKT NO.",
+        "票价 FARE",
+        "ETKT7813699238489/1",
+        "登机口于起飞前10分钟关闭",
+        "GATES CLOSE 10 MINUTES BEFORE DEPARTURE TIME"
+      ],
+      "text": "登机牌\nBOARDING PASS\n航班 FLIGHT\n日期 DATE\n舱位 CLASS\n序号 SERIAL NO.\n座位号 SEAT NO.\nMU 2379\n03DEC\nM\n035\n目的地 TO\n始发地 FROM\n登机口 GATE\n登机时间 BDT\n福州\nTAIYUAN\nG11\nFUZHOU\n身份识别 IDNO.\n姓名 NAME\nZHANGQIWEI\n张祺伟\n票号 TKT NO.\n票价 FARE\nETKT7813699238489/1\n登机口于起飞前10分钟关闭\nGATES CLOSE 10 MINUTES BEFORE DEPARTURE TIME",
+      "notes": "boarding pass; watermark www.997788.com ignored",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_00009282",
+      "file": "paddle_00009282.jpg",
+      "category": "product_label",
+      "label_source": "self-labeled",
+      "lines": [
+        "Meters/bonwe",
+        "洗涤说明",
+        "最高洗涤温度30℃",
+        "不可漂白",
+        "常规程序",
+        "悬挂晾干",
+        "熨斗底板最高温度110℃",
+        "常规干洗",
+        "注意事项：",
+        "分开洗涤，不宜长时间浸泡，有",
+        "钮扣或拉链的服饰先将钮扣或拉链",
+        "扣好，熨烫时采用仅蒸汽熨烫。"
+      ],
+      "text": "Meters/bonwe\n洗涤说明\n最高洗涤温度30℃\n不可漂白\n常规程序\n悬挂晾干\n熨斗底板最高温度110℃\n常规干洗\n注意事项：\n分开洗涤，不宜长时间浸泡，有\n钮扣或拉链的服饰先将钮扣或拉链\n扣好，熨烫时采用仅蒸汽熨烫。",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_00018069",
+      "file": "paddle_00018069.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "代号",
+        "项目",
+        "结果",
+        "参考值",
+        "单位",
+        "ALT",
+        "谷丙转氨酶",
+        "25.6",
+        "0--40",
+        "U/L",
+        "TBIL",
+        "总胆红素",
+        "11.2",
+        "<20",
+        "umol/L",
+        "DBIL",
+        "直接胆红素",
+        "3.3",
+        "0--7",
+        "umol/L",
+        "IBIL",
+        "间接胆红素",
+        "7.9",
+        "1.5--15",
+        "umol/L",
+        "TP",
+        "总蛋白",
+        "58.9↓",
+        "60--80",
+        "g/L",
+        "ALB",
+        "白蛋白",
+        "35.1",
+        "33--55",
+        "g/L",
+        "GLO",
+        "球蛋白",
+        "23.8",
+        "20--30",
+        "g/L",
+        "A/G",
+        "白球比",
+        "1.5",
+        "1.5--2.5",
+        "ALP",
+        "碱性磷酸酶",
+        "93",
+        "15--112",
+        "IU/L",
+        "GGT",
+        "谷氨酰转肽酶",
+        "14.3",
+        "<50",
+        "U/L",
+        "AST",
+        "谷草转氨酶",
+        "16.3",
+        "8--40",
+        "U/L",
+        "LDH",
+        "乳酸脱氢酶",
+        "167",
+        "114--240",
+        "U/L",
+        "ADA",
+        "腺苷脱氨酶",
+        "12.6",
+        "4--24",
+        "U/L"
+      ],
+      "text": "代号\n项目\n结果\n参考值\n单位\nALT\n谷丙转氨酶\n25.6\n0--40\nU/L\nTBIL\n总胆红素\n11.2\n<20\numol/L\nDBIL\n直接胆红素\n3.3\n0--7\numol/L\nIBIL\n间接胆红素\n7.9\n1.5--15\numol/L\nTP\n总蛋白\n58.9↓\n60--80\ng/L\nALB\n白蛋白\n35.1\n33--55\ng/L\nGLO\n球蛋白\n23.8\n20--30\ng/L\nA/G\n白球比\n1.5\n1.5--2.5\nALP\n碱性磷酸酶\n93\n15--112\nIU/L\nGGT\n谷氨酰转肽酶\n14.3\n<50\nU/L\nAST\n谷草转氨酶\n16.3\n8--40\nU/L\nLDH\n乳酸脱氢酶\n167\n114--240\nU/L\nADA\n腺苷脱氨酶\n12.6\n4--24\nU/L",
+      "notes": "lab report table",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_00015504",
+      "file": "paddle_00015504.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "2.2截至报告期末的普通股股东总数，前十名普通股股东、前十名无限售条件的普通",
+        "股股东的持股情况",
+        "单位：股",
+        "股东总数（户）",
+        "75,103",
+        "前十名股东持股情况",
+        "股东名称",
+        "期末持股数量",
+        "比例",
+        "持有有限售条件股份数量",
+        "股份状态",
+        "质押或冻结情况",
+        "数量",
+        "股东性质",
+        "成都交子金融控股集团有限公司",
+        "652,418,000",
+        "18.0613%",
+        "652,418,000",
+        "国有法人",
+        "Hong Leong Bank Berhad",
+        "650,000,000",
+        "17.9943%",
+        "650,000,000",
+        "境外法人"
+      ],
+      "text": "2.2截至报告期末的普通股股东总数，前十名普通股股东、前十名无限售条件的普通\n股股东的持股情况\n单位：股\n股东总数（户）\n75,103\n前十名股东持股情况\n股东名称\n期末持股数量\n比例\n持有有限售条件股份数量\n股份状态\n质押或冻结情况\n数量\n股东性质\n成都交子金融控股集团有限公司\n652,418,000\n18.0613%\n652,418,000\n国有法人\nHong Leong Bank Berhad\n650,000,000\n17.9943%\n650,000,000\n境外法人",
+      "notes": "dense shareholding table; GT covers header plus first two named shareholders (rest is dense and tiny)",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_00056221",
+      "file": "paddle_00056221.jpg",
+      "category": "ticket",
+      "label_source": "self-labeled",
+      "lines": [
+        "杭州东售",
+        "2013年07月07日13:39开",
+        "06车12B号",
+        "二等座",
+        "杭州东",
+        "G7512次",
+        "上海虹桥",
+        "HangZhouDong",
+        "ShangHaiHongQiao",
+        "￥73.00元",
+        "限乘当日当次车",
+        "余友红",
+        "检票口16",
+        "和谐号"
+      ],
+      "text": "杭州东售\n2013年07月07日13:39开\n06车12B号\n二等座\n杭州东\nG7512次\n上海虹桥\nHangZhouDong\nShangHaiHongQiao\n￥73.00元\n限乘当日当次车\n余友红\n检票口16\n和谐号",
+      "notes": "train ticket; ID number and camera EXIF watermark omitted from required lines",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_00057937",
+      "file": "paddle_00057937.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "院附属瑞金医院",
+        "报告单（临床内分泌）",
+        "标本号：OA",
+        "门诊号：E05535540",
+        "标本种类：血清",
+        "年龄：31",
+        "门诊科别：门诊内分泌",
+        "申请医生：孙首悦",
+        "项目",
+        "结果",
+        "参考范围",
+        "FT3",
+        "3.12",
+        "2.62--6.49pmol/L",
+        "FT4",
+        "15.40",
+        "9.01--19.04pmol/L",
+        "STSH",
+        "1.31",
+        "0.35--4.94μIU/ml",
+        "降钙素",
+        "0.1",
+        "0.1--10.0pg/ml",
+        "检验：李纪平",
+        "以上7项检验结果仅供临床医师参考"
+      ],
+      "text": "院附属瑞金医院\n报告单（临床内分泌）\n标本号：OA\n门诊号：E05535540\n标本种类：血清\n年龄：31\n门诊科别：门诊内分泌\n申请医生：孙首悦\n项目\n结果\n参考范围\nFT3\n3.12\n2.62--6.49pmol/L\nFT4\n15.40\n9.01--19.04pmol/L\nSTSH\n1.31\n0.35--4.94μIU/ml\n降钙素\n0.1\n0.1--10.0pg/ml\n检验：李纪平\n以上7项检验结果仅供临床医师参考",
+      "notes": "hospital lab report; some header digits are low-contrast",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_00059985",
+      "file": "paddle_00059985.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "小学数学第八册第三单元测试题",
+        "（小数乘法）",
+        "姓名：",
+        "班别：",
+        "分数：",
+        "一、计算题。(共38分)",
+        "1.直接写出得数。(10分)",
+        "0.8×25=",
+        "0×4.23=",
+        "0.57+0.43=",
+        "2.4×0.2=",
+        "0.02×500=",
+        "2.8×10=",
+        "8.29×100=",
+        "2.5×0.4=",
+        "4.87-1.7=",
+        "8.07×1000=",
+        "2.用竖式计算。(12分)",
+        "2.97×3.8=",
+        "7.05×0.84="
+      ],
+      "text": "小学数学第八册第三单元测试题\n（小数乘法）\n姓名：\n班别：\n分数：\n一、计算题。(共38分)\n1.直接写出得数。(10分)\n0.8×25=\n0×4.23=\n0.57+0.43=\n2.4×0.2=\n0.02×500=\n2.8×10=\n8.29×100=\n2.5×0.4=\n4.87-1.7=\n8.07×1000=\n2.用竖式计算。(12分)\n2.97×3.8=\n7.05×0.84=",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_00077949",
+      "file": "paddle_00077949.jpg",
+      "category": "product_label",
+      "label_source": "self-labeled",
+      "lines": [
+        "合格证",
+        "品名：纯棉单面背心套",
+        "执行标准：FZ/T73025-2006",
+        "安全类别：GB18401-2010",
+        "A类婴幼儿用品",
+        "货号：B2390",
+        "等级：一等品",
+        "检验员：08",
+        "成份：面料：100%棉",
+        "小晶晶母婴",
+        "品名：纯棉单面背心套",
+        "零售价：47.50元",
+        "上装：66/48",
+        "下装：66/47"
+      ],
+      "text": "合格证\n品名：纯棉单面背心套\n执行标准：FZ/T73025-2006\n安全类别：GB18401-2010\nA类婴幼儿用品\n货号：B2390\n等级：一等品\n检验员：08\n成份：面料：100%棉\n小晶晶母婴\n品名：纯棉单面背心套\n零售价：47.50元\n上装：66/48\n下装：66/47",
+      "notes": "",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_00111002",
+      "file": "paddle_00111002.jpg",
+      "category": "receipt",
+      "label_source": "self-labeled",
+      "lines": [
+        "中国工商银行",
+        "持卡人存根",
+        "商户名称&编号(MERCHANT NAME & CODE)",
+        "工行浣纱支行积分兑换",
+        "120214020408",
+        "卡号(CARD NUMBER):",
+        "622210512",
+        "牡丹准贷记卡",
+        "交易日期(DATE)",
+        "交易时间(TIME)",
+        "2012-10-23",
+        "12:43:15",
+        "积分兑奖",
+        "信用卡积分：50000",
+        "持卡人签名",
+        "(CARDHOLDER SIGNATURE):"
+      ],
+      "text": "中国工商银行\n持卡人存根\n商户名称&编号(MERCHANT NAME & CODE)\n工行浣纱支行积分兑换\n120214020408\n卡号(CARD NUMBER):\n622210512\n牡丹准贷记卡\n交易日期(DATE)\n交易时间(TIME)\n2012-10-23\n12:43:15\n积分兑奖\n信用卡积分：50000\n持卡人签名\n(CARDHOLDER SIGNATURE):",
+      "notes": "",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_en_254",
+      "file": "paddle_en_254.jpg",
+      "category": "receipt",
+      "label_source": "self-labeled",
+      "lines": [
+        "PHO CAPITAL",
+        "107 State Street",
+        "Montpelier Vermont",
+        "802 225 6183",
+        "REG 07-24-2017 06:59 PM",
+        "THANK YOU",
+        "FOR YOUR BUSINESS",
+        "CASH"
+      ],
+      "text": "PHO CAPITAL\n107 State Street\nMontpelier Vermont\n802 225 6183\nREG 07-24-2017 06:59 PM\nTHANK YOU\nFOR YOUR BUSINESS\nCASH",
+      "notes": "receipt; itemized amounts are low-contrast thermal print, only clear header/footer required",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_00207393",
+      "file": "paddle_00207393.jpg",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "中国农业银行",
+        "AGRICULTURAL BANK OF CHINA",
+        "本网点办理各类金融业务"
+      ],
+      "text": "中国农业银行\nAGRICULTURAL BANK OF CHINA\n本网点办理各类金融业务",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "derived_bank_rot90",
+      "file": "derived_bank_rot90.jpg",
+      "category": "rotated",
+      "label_source": "self-labeled",
+      "lines": [
+        "中国农业银行",
+        "AGRICULTURAL BANK OF CHINA",
+        "本网点办理各类金融业务"
+      ],
+      "text": "中国农业银行\nAGRICULTURAL BANK OF CHINA\n本网点办理各类金融业务",
+      "notes": "90° rotation of paddle_00207393.jpg",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "derived_bank_rot180",
+      "file": "derived_bank_rot180.jpg",
+      "category": "rotated",
+      "label_source": "self-labeled",
+      "lines": [
+        "中国农业银行",
+        "AGRICULTURAL BANK OF CHINA",
+        "本网点办理各类金融业务"
+      ],
+      "text": "中国农业银行\nAGRICULTURAL BANK OF CHINA\n本网点办理各类金融业务",
+      "notes": "180° rotation of paddle_00207393.jpg",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_1",
+      "file": "paddle_1.jpg",
+      "category": "vertical",
+      "label_source": "self-labeled",
+      "lines": [
+        "华南农业大学——东园",
+        "土地整治与土壤修复研究中心"
+      ],
+      "text": "华南农业大学——东园\n土地整治与土壤修复研究中心",
+      "notes": "vertical plaque on a gate pillar",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_12",
+      "file": "paddle_12.jpg",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "上海斯格威铂尔大酒店",
+        "打浦路15号",
+        "绿洲仕格维花园公寓",
+        "打浦路25 29 35号"
+      ],
+      "text": "上海斯格威铂尔大酒店\n打浦路15号\n绿洲仕格维花园公寓\n打浦路25 29 35号",
+      "notes": "phone photo, shadows and perspective",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "derived_12_rot90",
+      "file": "derived_12_rot90.jpg",
+      "category": "rotated",
+      "label_source": "self-labeled",
+      "lines": [
+        "上海斯格威铂尔大酒店",
+        "打浦路15号",
+        "绿洲仕格维花园公寓",
+        "打浦路25 29 35号"
+      ],
+      "text": "上海斯格威铂尔大酒店\n打浦路15号\n绿洲仕格维花园公寓\n打浦路25 29 35号",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_11",
+      "file": "paddle_11.jpg",
+      "category": "screenshot",
+      "label_source": "self-labeled",
+      "lines": [
+        "纯臻营养护发素",
+        "产品信息/参数",
+        "(45元/每公斤，100公斤起订）",
+        "每瓶22元，1000瓶起订）",
+        "【品牌】：代加工方式/OEM ODM",
+        "【品名】：纯臻营养护发素",
+        "【产品编号】：YM-X-3011",
+        "【净含量】：220ml",
+        "【适用人群】：适合所有肤质",
+        "【主要成分】：鲸蜡硬脂醇、燕麦β-葡聚糖、椰油酰胺丙基甜菜碱、泛醌",
+        "（成品包材）",
+        "【主要功能】：可紧致头发鳞层，从而达到即时持久改善头发光泽的效果，给干燥的头发足够的滋养",
+        "ODM OEM"
+      ],
+      "text": "纯臻营养护发素\n产品信息/参数\n(45元/每公斤，100公斤起订）\n每瓶22元，1000瓶起订）\n【品牌】：代加工方式/OEM ODM\n【品名】：纯臻营养护发素\n【产品编号】：YM-X-3011\n【净含量】：220ml\n【适用人群】：适合所有肤质\n【主要成分】：鲸蜡硬脂醇、燕麦β-葡聚糖、椰油酰胺丙基甜菜碱、泛醌\n（成品包材）\n【主要功能】：可紧致头发鳞层，从而达到即时持久改善头发光泽的效果，给干燥的头发足够的滋养\nODM OEM",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "derived_11_rot180",
+      "file": "derived_11_rot180.jpg",
+      "category": "rotated",
+      "label_source": "self-labeled",
+      "lines": [
+        "纯臻营养护发素",
+        "产品信息/参数",
+        "(45元/每公斤，100公斤起订）",
+        "每瓶22元，1000瓶起订）",
+        "【品牌】：代加工方式/OEM ODM",
+        "【品名】：纯臻营养护发素",
+        "【产品编号】：YM-X-3011",
+        "【净含量】：220ml",
+        "【适用人群】：适合所有肤质",
+        "ODM OEM"
+      ],
+      "text": "纯臻营养护发素\n产品信息/参数\n(45元/每公斤，100公斤起订）\n每瓶22元，1000瓶起订）\n【品牌】：代加工方式/OEM ODM\n【品名】：纯臻营养护发素\n【产品编号】：YM-X-3011\n【净含量】：220ml\n【适用人群】：适合所有肤质\nODM OEM",
+      "notes": "180° rotation; shorter required lines so dense body errors don't dominate",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_en_img10",
+      "file": "paddle_en_img10.jpg",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "Please lower your volume",
+        "when you pass by",
+        "residential areas."
+      ],
+      "text": "Please lower your volume\nwhen you pass by\nresidential areas.",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_en_img11",
+      "file": "paddle_en_img11.jpg",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "BEWARE OF",
+        "MAINTENANCE",
+        "VEHICLES"
+      ],
+      "text": "BEWARE OF\nMAINTENANCE\nVEHICLES",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_en_img12",
+      "file": "paddle_en_img12.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "ACKNOWLEDGEMENTS",
+        "We would like to thank all the designers and contributors who have been involved in the production of this book; their contributions have been indispensable to its creation. We would also like to express our gratitude to all the producers for their invaluable opinions and assistance throughout this project. And to the many others whose names are not credited but have made specific input in this book, we thank you for your continuous support."
+      ],
+      "text": "ACKNOWLEDGEMENTS\nWe would like to thank all the designers and contributors who have been involved in the production of this book; their contributions have been indispensable to its creation. We would also like to express our gratitude to all the producers for their invaluable opinions and assistance throughout this project. And to the many others whose names are not credited but have made specific input in this book, we thank you for your continuous support.",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_en_img195",
+      "file": "paddle_en_img195.jpg",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "EXPERIENCE",
+        "FIBRE HERE",
+        "Open to Public,",
+        "Free Admission."
+      ],
+      "text": "EXPERIENCE\nFIBRE HERE\nOpen to Public,\nFree Admission.",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_en_img623",
+      "file": "paddle_en_img623.jpg",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "HARANA",
+        "SPARE RIBS",
+        "BARBECUES",
+        "FILIPINO DISHES",
+        "SINCE",
+        "1966"
+      ],
+      "text": "HARANA\nSPARE RIBS\nBARBECUES\nFILIPINO DISHES\nSINCE\n1966",
+      "notes": "stylized curved logo text HARANA",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "derived_road_sign",
+      "file": "derived_road_sign.jpg",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "礼让三分平安在",
+        "抢行一秒后悔迟"
+      ],
+      "text": "礼让三分平安在\n抢行一秒后悔迟",
+      "notes": "cropped left half of PaddleOCR PP-OCRv3-pic003.jpg",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_street_rec_1",
+      "file": "paddle_street_rec_1.png",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "魅派集成吊顶"
+      ],
+      "text": "魅派集成吊顶",
+      "notes": "LSVT-style cropped shop sign",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_street_rec_2",
+      "file": "paddle_street_rec_2.png",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "母婴用品连锁"
+      ],
+      "text": "母婴用品连锁",
+      "notes": "LSVT-style cropped shop sign",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_textline",
+      "file": "paddle_textline.png",
+      "category": "street_sign",
+      "label_source": "self-labeled",
+      "lines": [
+        "绿洲仕格维花园公寓"
+      ],
+      "text": "绿洲仕格维花园公寓",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_textline_rot180",
+      "file": "paddle_textline_rot180.jpg",
+      "category": "rotated",
+      "label_source": "self-labeled",
+      "lines": [
+        "ZHOUZHUJIANG BRE"
+      ],
+      "text": "ZHOUZHUJIANG BRE",
+      "notes": "upside-down Latin on the same hotel-sign family; confirm visually if mostly Latin",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_test_add_91",
+      "file": "paddle_test_add_91.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "铭牌上的车辆识别代码",
+        "车辆识别代号：LSGGF53W8CH066445",
+        "整车型号：SGM7247ATA",
+        "品牌：别克",
+        "发动机型号：LAF",
+        "发动机排量：2.384L",
+        "发动机额定功率：137kW",
+        "制造年月：12-02",
+        "座位数：5",
+        "最大设计总质量",
+        "2170kg",
+        "中国上海通用汽车有限公司制造"
+      ],
+      "text": "铭牌上的车辆识别代码\n车辆识别代号：LSGGF53W8CH066445\n整车型号：SGM7247ATA\n品牌：别克\n发动机型号：LAF\n发动机排量：2.384L\n发动机额定功率：137kW\n制造年月：12-02\n座位数：5\n最大设计总质量\n2170kg\n中国上海通用汽车有限公司制造",
+      "notes": "two side-by-side nameplates with the same text",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_ch_doc1",
+      "file": "paddle_ch_doc1.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "如，和对旅游表演形式"
+      ],
+      "text": "如，和对旅游表演形式",
+      "notes": "tiny cropped document line",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_ch_doc3",
+      "file": "paddle_ch_doc3.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "4年工作报告》中指出"
+      ],
+      "text": "4年工作报告》中指出",
+      "notes": "tiny cropped document line",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_casia",
+      "file": "paddle_casia.jpg",
+      "category": "handwriting",
+      "label_source": "self-labeled",
+      "lines": [
+        "袂",
+        "澳",
+        "吧",
+        "耙",
+        "扳"
+      ],
+      "text": "袂\n澳\n吧\n耙\n扳",
+      "notes": "CASIA-style isolated handwritten characters",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_seal",
+      "file": "paddle_seal.png",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "天津君和缘商贸有限公司",
+        "发票专用章",
+        "吗繁物",
+        "5263647368706"
+      ],
+      "text": "天津君和缘商贸有限公司\n发票专用章\n吗繁物\n5263647368706",
+      "notes": "circular seal; faint background watermark ignored",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_medal_table",
+      "file": "paddle_medal_table.png",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "名次",
+        "国家/地区",
+        "金牌",
+        "银牌",
+        "铜牌",
+        "奖牌总数",
+        "中国（CHN）",
+        "美国（USA）",
+        "俄罗斯（RUS）",
+        "英国（GBR）",
+        "德国（GER）",
+        "澳大利亚（AUS）",
+        "韩国（KOR）",
+        "日本（JPN）",
+        "意大利（ITA）",
+        "法国（FRA）",
+        "荷兰（NED）",
+        "乌克兰（UKR）",
+        "肯尼亚（KEN）",
+        "西班牙（ESP）",
+        "牙买加（JAM）",
+        "48",
+        "36",
+        "24",
+        "19",
+        "16",
+        "14",
+        "13",
+        "9",
+        "8",
+        "7",
+        "5",
+        "100",
+        "112",
+        "60",
+        "51",
+        "41",
+        "46",
+        "32",
+        "25",
+        "27",
+        "43",
+        "16",
+        "22",
+        "16",
+        "19",
+        "11"
+      ],
+      "text": "名次\n国家/地区\n金牌\n银牌\n铜牌\n奖牌总数\n中国（CHN）\n美国（USA）\n俄罗斯（RUS）\n英国（GBR）\n德国（GER）\n澳大利亚（AUS）\n韩国（KOR）\n日本（JPN）\n意大利（ITA）\n法国（FRA）\n荷兰（NED）\n乌克兰（UKR）\n肯尼亚（KEN）\n西班牙（ESP）\n牙买加（JAM）\n48\n36\n24\n19\n16\n14\n13\n9\n8\n7\n5\n100\n112\n60\n51\n41\n46\n32\n25\n27\n43\n16\n22\n16\n19\n11",
+      "notes": "medal table; numbers included as a bag of unique tokens plus names",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_book",
+      "file": "paddle_book.jpg",
+      "category": "book",
+      "label_source": "self-labeled",
+      "lines": [
+        "The disappearing sum",
+        "(Before we continue, grab this book and show somebody this sum. Rub their face on it if you need to and tell them that this is the sort of thing you do for fun without a calculator these days because you're so brilliant.)",
+        "Off we go then. For starters we'll get rid of the 7! bit from top and bottom and get:",
+        "Pow! That's already got rid of more than half the numbers.",
+        "Look! No bottom.",
+        "94",
+        "95"
+      ],
+      "text": "The disappearing sum\n(Before we continue, grab this book and show somebody this sum. Rub their face on it if you need to and tell them that this is the sort of thing you do for fun without a calculator these days because you're so brilliant.)\nOff we go then. For starters we'll get rid of the 7! bit from top and bottom and get:\nPow! That's already got rid of more than half the numbers.\nLook! No bottom.\n94\n95",
+      "notes": "book photo with perspective; only clearly readable sentences required",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "paddle_book_rot180",
+      "file": "paddle_book_rot180.jpg",
+      "category": "rotated",
+      "label_source": "self-labeled",
+      "lines": [
+        "The disappearing sum",
+        "Look! No bottom.",
+        "94",
+        "95"
+      ],
+      "text": "The disappearing sum\nLook! No bottom.\n94\n95",
+      "notes": "180° book page",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "derived_lab_left",
+      "file": "derived_lab_left.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "性别：男",
+        "住院号：",
+        "年龄：34岁",
+        "科室：内科",
+        "代号",
+        "项目",
+        "结果",
+        "参考值",
+        "GLU",
+        "葡萄糖",
+        "6.27↑",
+        "3.9--6.11 mmol/L",
+        "TG",
+        "甘油三酯",
+        "2.12↑",
+        "0.4--1.88 mmol/L",
+        "HDL",
+        "高密度胆固醇",
+        "1.80",
+        "0.83--1.91 mmol/L",
+        "LDL",
+        "低密度胆固醇",
+        "APOB",
+        "载脂蛋白B"
+      ],
+      "text": "性别：男\n住院号：\n年龄：34岁\n科室：内科\n代号\n项目\n结果\n参考值\nGLU\n葡萄糖\n6.27↑\n3.9--6.11 mmol/L\nTG\n甘油三酯\n2.12↑\n0.4--1.88 mmol/L\nHDL\n高密度胆固醇\n1.80\n0.83--1.91 mmol/L\nLDL\n低密度胆固醇\nAPOB\n载脂蛋白B",
+      "notes": "left half of a lab report photo",
+      "gt_coverage": "partial"
+    },
+    {
+      "id": "rapid_ch_en_num",
+      "file": "rapid_ch_en_num.jpg",
+      "category": "screenshot",
+      "label_source": "self-labeled",
+      "lines": [
+        "正品促销",
+        "大桶装 更划算",
+        "强力去污 符合国标",
+        "日常价",
+        "底价",
+        "券后价",
+        "5.8",
+        "惊喜福利不容错过",
+        "极速发货",
+        "冰点标准",
+        "破损就赔",
+        "假一赔十"
+      ],
+      "text": "正品促销\n大桶装 更划算\n强力去污 符合国标\n日常价\n底价\n券后价\n5.8\n惊喜福利不容错过\n极速发货\n冰点标准\n破损就赔\n假一赔十",
+      "notes": "CN e-commerce poster",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "rapid_en",
+      "file": "rapid_en.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "3 MovieShots Dataset",
+        "To facilitate the shot type analysis in videos, we collect MovieShots, a large-scale shot type annotation set that contains 46K shots from 7858 movies. The details of this dataset are specified as follows."
+      ],
+      "text": "3 MovieShots Dataset\nTo facilitate the shot type analysis in videos, we collect MovieShots, a large-scale shot type annotation set that contains 46K shots from 7858 movies. The details of this dataset are specified as follows.",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "derived_en_rot180",
+      "file": "derived_en_rot180.jpg",
+      "category": "rotated",
+      "label_source": "self-labeled",
+      "lines": [
+        "3 MovieShots Dataset",
+        "To facilitate the shot type analysis in videos, we collect MovieShots, a large-scale shot type annotation set that contains 46K shots from 7858 movies. The details of this dataset are specified as follows."
+      ],
+      "text": "3 MovieShots Dataset\nTo facilitate the shot type analysis in videos, we collect MovieShots, a large-scale shot type annotation set that contains 46K shots from 7858 movies. The details of this dataset are specified as follows.",
+      "notes": "",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "rapid_exif",
+      "file": "rapid_exif.jpg",
+      "category": "rotated",
+      "label_source": "self-labeled",
+      "lines": [
+        "我是中国人"
+      ],
+      "text": "我是中国人",
+      "notes": "upside-down printed text",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "rapid_text_cls",
+      "file": "rapid_text_cls.jpg",
+      "category": "rotated",
+      "label_source": "self-labeled",
+      "lines": [
+        "怪我咯"
+      ],
+      "text": "怪我咯",
+      "notes": "upside-down short line",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "rapid_issue170",
+      "file": "rapid_issue170.png",
+      "category": "screenshot",
+      "label_source": "self-labeled",
+      "lines": [
+        "TEST"
+      ],
+      "text": "TEST",
+      "notes": "very large Latin letters",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "rapid_letterbox",
+      "file": "rapid_letterbox.jpg",
+      "category": "document",
+      "label_source": "self-labeled",
+      "lines": [
+        "A：取决于所使用的执行提供者，它可能没有完全支持模型中的所有操作。回落到CPU操作可能会导致性能速度的下降。此外，即使一个操作是由CUDA execution provider实现的，由于性能的原因，它也不一定会把操作分配/放置到CUDA EP上。要想看到ORT决定的位置，请打开verbose日志并查看控制台的输出。"
+      ],
+      "text": "A：取决于所使用的执行提供者，它可能没有完全支持模型中的所有操作。回落到CPU操作可能会导致性能速度的下降。此外，即使一个操作是由CUDA execution provider实现的，由于性能的原因，它也不一定会把操作分配/放置到CUDA EP上。要想看到ORT决定的位置，请打开verbose日志并查看控制台的输出。",
+      "notes": "extremely long dense UI line",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "rapid_vertical",
+      "file": "rapid_vertical.png",
+      "category": "vertical",
+      "label_source": "self-labeled",
+      "lines": [
+        "有評是是非非之士師也",
+        "是非不得問之人要取之",
+        "巳取之時不參一人見而"
+      ],
+      "text": "有評是是非非之士師也\n是非不得問之人要取之\n巳取之時不參一人見而",
+      "notes": "traditional vertical book page, columns right to left",
+      "gt_coverage": "complete"
+    },
+    {
+      "id": "paddle_doc_formula",
+      "file": "paddle_doc_formula.png",
+      "category": "scan",
+      "label_source": "self-labeled",
+      "lines": [
+        "a compilation of various multi-wavelength observations",
+        "that span IR, optical/UV, soft, and hard X-rays, and"
+      ],
+      "text": "a compilation of various multi-wavelength observations\nthat span IR, optical/UV, soft, and hard X-rays, and",
+      "notes": "scientific page; only the first clearly printed English sentences required",
+      "gt_coverage": "partial"
+    }
+  ],
+  "n": 46
+}

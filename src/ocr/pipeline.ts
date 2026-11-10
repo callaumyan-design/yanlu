@@ -10,7 +10,10 @@ import {
 } from "./geometry";
 import {
   detTargetSize,
+  borderIsPlain,
+  cropRgb,
   inflateQuad,
+  inkBoundingBox,
   normalizeNchw,
   padRgb,
   resizeNormFixed,
@@ -26,7 +29,7 @@ import type { OcrBox, OcrDeps, OcrProgress, OcrResult, Point, RgbImage } from ".
 
 const DET_THRESH = 0.3;
 const BOX_THRESH = 0.5;
-const UNCLIP_RATIO = 1.6;
+const UNCLIP_RATIO = 1.75;
 const MIN_SIZE = 3;
 const CLS_THRESH = 0.9;
 
@@ -75,7 +78,7 @@ function detectBoxes(prob: Float32Array, width: number, height: number, destWidt
 }
 
 async function runDet(image: RgbImage, deps: OcrDeps): Promise<RawBox[]> {
-  const target = detTargetSize(image.width, image.height);
+  const target = detTargetSize(image.width, image.height, 1280);
   const resized = resizeRgb(image, target.width, target.height);
   const input = normalizeNchw(resized);
   const output = await deps.det.run(input, [1, 3, resized.height, resized.width]);
@@ -381,6 +384,47 @@ function assemble(
  * PP-OCRv5 detection + text-line orientation + recognition.
  * Geometry follows the Apache-2.0 PaddleOCR / RapidOCR pipeline.
  */
+function composeRotation(a: 0 | 90 | 180 | 270, b: 0 | 90 | 180 | 270): 0 | 90 | 180 | 270 {
+  return ((a + b) % 360) as 0 | 90 | 180 | 270;
+}
+
+function readQuality(read: { fragments: Fragment[]; upsideDown: number; total: number }): number {
+  const n = read.fragments.reduce((sum, fragment) => sum + fragment.text.replace(/\s+/g, "").length, 0);
+  const score =
+    read.fragments.reduce((sum, fragment) => sum + fragment.score, 0) / Math.max(read.total, 1);
+  const up = read.upsideDown / Math.max(read.total, 1);
+  return n * Math.max(score, 0.05) * (1 - 0.65 * up);
+}
+
+function isTextStrip(image: RgbImage): boolean {
+  const shortSide = Math.min(image.width, image.height);
+  const longSide = Math.max(image.width, image.height);
+  return shortSide <= 180 || longSide / Math.max(shortSide, 1) >= 5;
+}
+
+async function recognizeInkLine(
+  image: RgbImage,
+  deps: OcrDeps,
+): Promise<{ rec: { text: string; score: number }; turned: boolean; points: Point[] } | null> {
+  const box = inkBoundingBox(image, 8) ?? { x: 0, y: 0, width: image.width, height: image.height };
+  let crop = cropRgb(image, box.x, box.y, box.width, box.height);
+  if (crop.height / Math.max(crop.width, 1) >= 1.5) crop = rot90ccw(crop);
+  const prepared = await recognizePrepared(crop, deps);
+  const text = restoreOcrSpaces(prepared.rec.text).trim();
+  if (!text) return null;
+  const points: Point[] = [
+    { x: box.x, y: box.y },
+    { x: box.x + box.width, y: box.y },
+    { x: box.x + box.width, y: box.y + box.height },
+    { x: box.x, y: box.y + box.height },
+  ];
+  return { rec: { text: prepared.rec.text, score: prepared.rec.score }, turned: prepared.turned, points };
+}
+
+/**
+ * PP-OCRv5 detection + text-line orientation + recognition.
+ * Geometry follows the Apache-2.0 PaddleOCR / RapidOCR pipeline.
+ */
 export async function recognizeImage(
   image: RgbImage,
   deps: OcrDeps,
@@ -420,7 +464,58 @@ export async function recognizeImage(
       boxes = best.boxes;
     }
   }
-  const read = await readImage(working, boxes, deps, onProgress, rotation === 0 ? 0.4 : 0.45);
+  let read = await readImage(working, boxes, deps, onProgress, rotation === 0 ? 0.4 : 0.45);
+  if (read.total > 0 && read.upsideDown * 2 >= read.total) {
+    onProgress?.({ ratio: 0.38, message: "正在校正上下颠倒的页面" });
+    const turned = rotateRgb(working, 180);
+    const boxes180 = await runDet(turned, deps);
+    const read180 = await readImage(turned, boxes180, deps, undefined, 0.55);
+    if (readQuality(read180) > readQuality(read) * 1.02) {
+      working = turned;
+      rotation = composeRotation(rotation, 180);
+      boxes = boxes180;
+      read = read180;
+    }
+  }
+  const strip = isTextStrip(working);
+  const plain = borderIsPlain(working);
+  const shouldFallback =
+    boxes.length === 0 ||
+    strip ||
+    (plain && boxes.length <= 3);
+  if (shouldFallback) {
+    const fallback = await recognizeInkLine(working, deps);
+    if (fallback) {
+      const text = restoreOcrSpaces(fallback.rec.text).trim();
+      const existing = read.fragments.map((fragment) => fragment.text).join("");
+      const existingLoose = existing.replace(/\s+/g, "");
+      const fallbackLoose = text.replace(/\s+/g, "");
+      // Only replace a detected page when the fallback is clearly more complete.
+      // A 2–3 box vertical page must not be collapsed into one rec crop.
+      const existingWeak = existingLoose.length <= 8;
+      const better =
+        read.fragments.length === 0 ||
+        (strip && fallbackLoose.length >= existingLoose.length && fallback.rec.score >= 0.55) ||
+        (existingWeak && fallbackLoose.length > existingLoose.length && fallback.rec.score >= 0.55) ||
+        (read.total <= 2 &&
+          fallbackLoose.length > existingLoose.length * 1.2 &&
+          fallback.rec.score >= 0.6);
+      if (better && text) {
+        read = {
+          fragments: [
+            {
+              text,
+              score: fallback.rec.score,
+              points: fallback.points,
+              upsideDown: fallback.turned,
+            },
+          ],
+          upsideDown: fallback.turned ? 1 : 0,
+          total: 1,
+        };
+      }
+    }
+  }
   onProgress?.({ ratio: 1, message: "识别完成" });
   return assemble(read.fragments, image.width, image.height, rotation);
 }
